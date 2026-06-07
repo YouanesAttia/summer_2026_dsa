@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <string>
 #include <queue>
+#include <set>
 
 int main()
 {
@@ -94,7 +95,6 @@ int main()
     std::cout << "Unordered_map lookup time: " << umapTime.count() << " microseconds\n"; // 4.3118
 
     // Uses std::priority_queue to sort a random vector of integers
-
     std::vector<int> v3{1, 2, 5, 6, 2342, 235, 55, 664, 7467, 86, 45, 345};
     std::priority_queue<int> pq1;
     int n = v3.size();
@@ -114,4 +114,24 @@ int main()
 
     for (auto a : v3)
         std::cout << a << " ";
+
+    // Uses std::set to find all unique elements in a vector with duplicates
+    std::vector<int> numbers{
+        1, 5, 2, 3, 5, 2, 7, 1, 8, 3, 9, 7};
+
+    std::set<int> uniqueElements;
+
+    for (int num : numbers)
+    {
+        uniqueElements.insert(num);
+    }
+
+    std::cout << "Unique elements:\n";
+
+    for (int num : uniqueElements)
+    {
+        std::cout << num << ' ';
+    }
+
+    std::cout << '\n';
 }
