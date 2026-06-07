@@ -10,7 +10,6 @@ private:
     std::string filename;
 
 public:
-    // 1. Constructor: Resource Acquisition
     FileHandler(const std::string &name) : filename(name)
     {
         file.open(filename);
