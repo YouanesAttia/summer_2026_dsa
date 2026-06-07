@@ -10,6 +10,7 @@
 #include <map>
 #include <unordered_map>
 #include <string>
+#include <queue>
 
 int main()
 {
@@ -91,4 +92,26 @@ int main()
     auto endumap = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> umapTime = endumap - startumap;
     std::cout << "Unordered_map lookup time: " << umapTime.count() << " microseconds\n"; // 4.3118
+
+    // Uses std::priority_queue to sort a random vector of integers
+
+    std::vector<int> v3{1, 2, 5, 6, 2342, 235, 55, 664, 7467, 86, 45, 345};
+    std::priority_queue<int> pq1;
+    int n = v3.size();
+    for (int i = 0; i < n; i++)
+    {
+        int value = v3.back();
+        pq1.push(value);
+        v3.pop_back();
+    }
+
+    while (!pq1.empty())
+    {
+        int val = pq1.top();
+        v3.push_back(val);
+        pq1.pop();
+    }
+
+    for (auto a : v3)
+        std::cout << a << " ";
 }
