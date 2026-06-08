@@ -1,3 +1,8 @@
+// KEY DIFFERENCE:
+// - std::sort: Fast, uses Introsort, but UNSTABLE (may reorder equal elements).
+// - std::stable_sort: Uses Merge Sort, STABLE (guarantees original order for ties).
+// COMPLEXITY: Both are O(N log N). Stable sort may require extra memory.
+
 #include <algorithm>
 #include <array>
 #include <functional>
