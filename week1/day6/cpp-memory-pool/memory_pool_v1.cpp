@@ -1,30 +1,30 @@
 #include <iostream>
-#include <vector>
+#include <stdexcept>
 #include <cstddef>
-#include <cassert>
-
-using namespace std;
 
 class MemoryPool
 {
 private:
-    struct Node
+    struct BlockHeader
     {
         size_t size;
-        Node *next;
+        bool isFree;
+        BlockHeader *next;
     };
+
     char *buffer;
     size_t poolSize;
-    Node *freeList;
+    BlockHeader *freeList;
 
 public:
-    MemoryPool(size_t bytes)
-        : poolSize(bytes)
+    explicit MemoryPool(size_t size)
+        : poolSize(size)
     {
         buffer = new char[poolSize];
 
-        freeList = reinterpret_cast<Node *>(buffer);
-        freeList->size = poolSize;
+        freeList = reinterpret_cast<BlockHeader *>(buffer);
+        freeList->size = poolSize - sizeof(BlockHeader);
+        freeList->isFree = true;
         freeList->next = nullptr;
     }
 
@@ -32,70 +32,48 @@ public:
     {
         delete[] buffer;
     }
+
     void *allocate(size_t bytes)
     {
-        Node *prev = nullptr;
-        Node *current = freeList;
+        BlockHeader *prev = nullptr;
+        BlockHeader *curr = freeList;
 
-        while (current)
+        while (curr)
         {
-            if (current->size >= bytes + sizeof(Node))
+            if (curr->isFree && curr->size >= bytes)
             {
-                char *allocatedMemory =
-                    reinterpret_cast<char *>(current);
-
-                size_t remaining =
-                    current->size - bytes;
-
-                Node *newBlock =
-                    reinterpret_cast<Node *>(
-                        allocatedMemory + bytes);
-
-                newBlock->size = remaining;
-                newBlock->next = current->next;
+                curr->isFree = false;
 
                 if (prev)
-                    prev->next = newBlock;
+                    prev->next = curr->next;
                 else
-                    freeList = newBlock;
+                    freeList = curr->next;
 
-                return allocatedMemory;
+                return curr + 1;
             }
 
-            prev = current;
-            current = current->next;
+            prev = curr;
+            curr = curr->next;
         }
 
         return nullptr;
     }
 
-    void deallocate(void *ptr, size_t bytes)
+    void deallocate(void *ptr)
     {
         if (!ptr)
             return;
 
-        Node *block =
-            reinterpret_cast<Node *>(ptr);
+        BlockHeader *header =
+            reinterpret_cast<BlockHeader *>(ptr) - 1;
 
-        block->size = bytes;
-        block->next = freeList;
+        if (header->isFree)
+            throw std::runtime_error("Double free detected");
 
-        freeList = block;
-    }
+        header->isFree = true;
 
-    void printFreeList() const
-    {
-        const Node *current = freeList;
-
-        while (current)
-        {
-            std::cout
-                << "[size=" << current->size << "] -> ";
-
-            current = current->next;
-        }
-
-        std::cout << "null\n";
+        header->next = freeList;
+        freeList = header;
     }
 };
 
@@ -103,19 +81,32 @@ int main()
 {
     MemoryPool pool(1024);
 
-    void *a = pool.allocate(128);
-    void *b = pool.allocate(256);
+    void *p1 = pool.allocate(128);
+    void *p2 = pool.allocate(256);
 
-    std::cout << "After allocations:\n";
-    pool.printFreeList();
+    if (!p1 || !p2)
+        return 1;
 
-    pool.deallocate(a, 128);
+    pool.deallocate(p1);
 
-    std::cout << "After deallocation:\n";
-    pool.printFreeList();
+    void *p3 = pool.allocate(64);
 
-    if (b)
-        std::cout << "Allocation successful\n";
+    if (!p3)
+        return 1;
 
-    return 0;
+    void *big = pool.allocate(5000);
+
+    if (big == nullptr)
+        std::cout << "Out of memory test passed\n";
+
+    try
+    {
+        pool.deallocate(p1);
+    }
+    catch (const std::runtime_error &)
+    {
+        std::cout << "Double free test passed\n";
+    }
+
+    std::cout << "All tests passed\n";
 }
