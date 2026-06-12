@@ -10,22 +10,17 @@ private:
         T data;
         Node *next;
 
-        Node(const T &value)
-            : data(value), next(nullptr)
-        {
-        }
+        Node(const T &value) : data(value), next(nullptr) {}
     };
 
     Node *head;
 
 public:
-    // Constructor
     SinglyLinkedList()
         : head(nullptr)
     {
     }
 
-    // Destructor
     ~SinglyLinkedList()
     {
         while (head != nullptr)
@@ -36,7 +31,6 @@ public:
         }
     }
 
-    // Prevent shallow copies
     SinglyLinkedList(const SinglyLinkedList &) = delete;
     SinglyLinkedList &operator=(const SinglyLinkedList &) = delete;
 
