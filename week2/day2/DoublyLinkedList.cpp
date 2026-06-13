@@ -218,6 +218,63 @@ public:
 
         delete current;
     }
+
+    bool hasCycle()
+    {
+        node *slow = first;
+        node *fast = first;
+        while (true)
+        {
+            if (slow == nullptr)
+                return false;
+
+            slow = slow->next;
+
+            if (fast == nullptr)
+                return false;
+
+            fast = fast->next;
+
+            if (fast == nullptr)
+                return false;
+
+            fast = fast->next;
+
+            if (slow == fast)
+                return true;
+        }
+    }
+
+    bool hasCycle2()
+    {
+        node *slow = first;
+        node *fast = first;
+
+        while (fast != nullptr && fast->next != nullptr)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+
+            if (slow == fast)
+                return true;
+        }
+
+        return false;
+    }
+
+    void makeCycle()
+    {
+        if (first == nullptr)
+            return;
+
+        node *last = first;
+
+        while (last->next != nullptr)
+            last = last->next;
+
+        last->next = first;
+        first->prev = last;
+    }
 };
 
 #include <iostream>
@@ -285,6 +342,31 @@ int main()
     {
         std::cout << "Caught exception: " << e.what() << '\n';
     }
+
+    std::cout << "\nTesting hasCycle():\n";
+
+    DoublyLinkedList<int> cycleList;
+
+    cycleList.push_back(1);
+    cycleList.push_back(2);
+    cycleList.push_back(3);
+    cycleList.push_back(4);
+
+    std::cout << "Before creating cycle: ";
+
+    if (cycleList.hasCycle())
+        std::cout << "Cycle detected\n";
+    else
+        std::cout << "No cycle\n";
+
+    cycleList.makeCycle();
+
+    std::cout << "After creating cycle: ";
+
+    if (cycleList.hasCycle())
+        std::cout << "Cycle detected\n";
+    else
+        std::cout << "No cycle\n";
 
     std::cout << "\nAll tests completed.\n";
 
