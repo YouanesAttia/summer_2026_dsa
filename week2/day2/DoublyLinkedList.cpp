@@ -275,6 +275,23 @@ public:
         last->next = first;
         first->prev = last;
     }
+
+    node *findMiddle(node *head)
+    {
+        if (head == nullptr)
+            return nullptr;
+
+        node *slow = head;
+        node *fast = head;
+
+        while (fast != nullptr && fast->next != nullptr)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        return slow;
+    }
 };
 
 #include <iostream>
