@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include "Stack.hpp"
 
 template <class T>
 class Tree
@@ -111,5 +112,83 @@ public:
         postorder(n->left);
         postorder(n->right);
         cout << n->data << " ";
+    }
+
+    void preorderI()
+    {
+
+        if (!root)
+            return;
+
+        Stack<node *> s;
+        s.push(root);
+
+        while (!s.empty())
+        {
+            node *n = st.top();
+            st.pop();
+            cout << n->data;
+
+            if (n->right)
+                s.push(n->right);
+
+            if (n->left)
+                s.push(n->left);
+        }
+    }
+
+    void inorderI()
+    {
+        if (!root)
+            return;
+
+        Stack<node *> s;
+        node *current = root;
+        while (current || !s.empty())
+        {
+            while (current)
+            {
+                st.push(current);
+                current = current->left;
+            }
+
+            current = st.top();
+            st.pop();
+
+            std::cout << current->data << " ";
+
+            current = current->right;
+        }
+    }
+
+    void postorderI()
+    {
+        if (!root)
+            return;
+
+        Stack<node *> s1;
+        Stack<node *> s2;
+
+        s1.push(root);
+
+        while (!s1.isEmpty())
+        {
+            node<T> *n = s1.top();
+            s1.pop();
+
+            s2.push(n);
+
+            if (n->left)
+                s1.push(n->left);
+
+            if (n->right)
+                s1.push(n->right);
+        }
+
+        while (!s2.isEmpty())
+        {
+            std::cout << s2.top()->data << " ";
+            s2.pop();
+        }
     }
 };
