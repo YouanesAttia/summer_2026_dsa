@@ -82,7 +82,7 @@ public:
     {
         if (n == nullptr)
             return;
-        cout << n->data << " ";
+        std::cout << n->data << " ";
         preorder(n->left);
         preorder(n->right);
     }
@@ -97,7 +97,7 @@ public:
         if (n == nullptr)
             return;
         inorder(n->left);
-        cout << n->data << " ";
+        std::cout << n->data << " ";
         inorder(n->right);
     }
 
@@ -112,7 +112,7 @@ public:
             return;
         postorder(n->left);
         postorder(n->right);
-        cout << n->data << " ";
+        std::cout << n->data << " ";
     }
 
     void preorderI()
@@ -126,9 +126,9 @@ public:
 
         while (!s.empty())
         {
-            node *n = st.top();
-            st.pop();
-            cout << n->data;
+            node *n = s.top();
+            s.pop();
+            std::cout << n->data << " ";
 
             if (n->right)
                 s.push(n->right);
@@ -149,12 +149,12 @@ public:
         {
             while (current)
             {
-                st.push(current);
+                s.push(current);
                 current = current->left;
             }
 
-            current = st.top();
-            st.pop();
+            current = s.top();
+            s.pop();
 
             std::cout << current->data << " ";
 
@@ -172,9 +172,9 @@ public:
 
         s1.push(root);
 
-        while (!s1.isEmpty())
+        while (!s1.empty())
         {
-            node<T> *n = s1.top();
+            node *n = s1.top();
             s1.pop();
 
             s2.push(n);
@@ -186,7 +186,7 @@ public:
                 s1.push(n->right);
         }
 
-        while (!s2.isEmpty())
+        while (!s2.empty())
         {
             std::cout << s2.top()->data << " ";
             s2.pop();
@@ -216,20 +216,20 @@ public:
         int x = 0, y = 0;
         if (n == 0)
             return 0;
-        x = height(n->lchild);
-        y = height(n->rchild);
+        x = height(n->left);
+        y = height(n->right);
         if (x > y)
             return x + 1;
         else
             return y + 1;
     }
 
-    int height() const
+    int height()
     {
         return height(root);
     }
 
-    int countNodes(node *n) const
+    int countNodes(node *n)
     {
         if (!n)
             return 0;
@@ -241,6 +241,54 @@ public:
 
     int countNodes()
     {
-        countNodes(root);
+        return countNodes(root);
     }
 };
+
+int main()
+{
+    Tree<int> t;
+
+    int values[] = {50, 30, 70, 20, 40, 60, 80};
+
+    for (int x : values)
+        t.insert(x);
+
+    std::cout << "Inorder (sorted): ";
+    t.inorder();
+    std::cout << "\n";
+
+    std::cout << "Preorder: ";
+    t.preorder();
+    std::cout << "\n";
+
+    std::cout << "Postorder: ";
+    t.postorder();
+    std::cout << "\n";
+
+    std::cout << "Level Order: ";
+    t.levelorder();
+    std::cout << "\n";
+
+    std::cout << "\nIterative Traversals\n";
+
+    std::cout << "Preorder Iterative: ";
+    t.preorderI();
+    std::cout << "\n";
+
+    std::cout << "Inorder Iterative: ";
+    t.inorderI();
+    std::cout << "\n";
+
+    std::cout << "Postorder Iterative: ";
+    t.postorderI();
+    std::cout << "\n";
+
+    std::cout << "\nTree Height = "
+              << t.height() << "\n";
+
+    std::cout << "Node Count = "
+              << t.countNodes() << "\n";
+
+    return 0;
+}

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "SinglyLinkedList.hpp"
+#include "../day3/SinglyLinkedList.hpp"
 
 template <typename T>
 class Stack
