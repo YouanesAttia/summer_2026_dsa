@@ -210,4 +210,37 @@ public:
                 q.enqueue(r->right);
         }
     }
+
+    int height(struct node *n)
+    {
+        int x = 0, y = 0;
+        if (n == 0)
+            return 0;
+        x = height(n->lchild);
+        y = height(n->rchild);
+        if (x > y)
+            return x + 1;
+        else
+            return y + 1;
+    }
+
+    int height() const
+    {
+        return height(root);
+    }
+
+    int countNodes(node *n) const
+    {
+        if (!n)
+            return 0;
+
+        return 1 +
+               countNodes(n->left) +
+               countNodes(n->right);
+    }
+
+    int countNodes()
+    {
+        countNodes(root);
+    }
 };
