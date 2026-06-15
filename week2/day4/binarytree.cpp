@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include "Stack.hpp"
+#include "Queue.hpp"
 
 template <class T>
 class Tree
@@ -189,6 +190,24 @@ public:
         {
             std::cout << s2.top()->data << " ";
             s2.pop();
+        }
+    }
+
+    void levelorder()
+    {
+        if (!root)
+            return;
+
+        Queue<node *> q;
+        q.enqueue(root);
+        while (!q.isempty())
+        {
+            node *r = q.dequeue();
+            std::cout << r->data << " ";
+            if (r->left)
+                q.enqueue(r->left);
+            if (r->right)
+                q.enqueue(r->right);
         }
     }
 };
