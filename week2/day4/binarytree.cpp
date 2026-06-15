@@ -15,6 +15,7 @@ private:
     node *root;
 
 public:
+    Tree() : root(nullptr) {}
     void insert(const T &d)
     {
         node *n = new node(d);
@@ -54,7 +55,8 @@ public:
             }
         }
     }
-    void insert(node *&n, const T &val)
+
+    void insertR(node *&n, const T &val)
     {
         if (n == nullptr)
         {
@@ -63,9 +65,51 @@ public:
         }
 
         if (val < n->data)
-            insert(n->left, val);
+            insertR(n->left, val);
 
         else if (val > n->data)
-            insert(n->right, val);
+            insertR(n->right, val);
+    }
+
+    void preorder()
+    {
+        preorder(root);
+    }
+
+    void preorder(node *n)
+    {
+        if (n == nullptr)
+            return;
+        cout << n->data << " ";
+        preorder(n->left);
+        preorder(n->right);
+    }
+
+    void inorder()
+    {
+        inorder(root);
+    }
+
+    void inorder(node *n)
+    {
+        if (n == nullptr)
+            return;
+        inorder(n->left);
+        cout << n->data << " ";
+        inorder(n->right);
+    }
+
+    void postorder()
+    {
+        postorder(root);
+    }
+
+    void postorder(node *n)
+    {
+        if (n == nullptr)
+            return;
+        postorder(n->left);
+        postorder(n->right);
+        cout << n->data << " ";
     }
 };
