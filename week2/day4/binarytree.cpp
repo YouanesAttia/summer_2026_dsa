@@ -4,6 +4,7 @@
 #include "Queue.hpp"
 #include <vector>
 #include <algorithm>
+#include <cassert>
 
 template <class T>
 class Tree
@@ -283,6 +284,14 @@ public:
         return t;
     }
 
+    node *findMin(node *n)
+    {
+        node *current = n;
+        while (current && current->left != nullptr)
+            current = current->left;
+        return current;
+    }
+
     node *findMax()
     {
         if (root == nullptr)
@@ -404,50 +413,112 @@ public:
     }
 };
 
+void printSection(const std::string &name)
+{
+    std::cout << "\n--- Testing " << name << " ---" << std::endl;
+}
+
 int main()
 {
-    Tree<int> t;
+    Tree<int> bst;
 
-    int values[] = {50, 30, 70, 20, 40, 60, 80};
+    /*
+            Structure we are building:
+                  50
+               /      \
+              30      70
+             /  \    /  \
+            20  40  60  80
+    */
 
-    for (int x : values)
-        t.insert(x);
+    printSection("Insertion and Count");
+    bst.insert(50);
+    bst.insert(30);
+    bst.insert(20);
+    bst.insert(40);
+    bst.insert(70);
+    bst.insert(60);
+    bst.insert(80);
 
-    std::cout << "Inorder (sorted): ";
-    t.inorder();
-    std::cout << "\n";
+    std::cout << "Nodes counted: " << bst.countNodes() << " (Expected: 7)" << std::endl;
+    assert(bst.countNodes() == 7);
 
-    std::cout << "Preorder: ";
-    t.preorder();
-    std::cout << "\n";
+    printSection("Height");
+    std::cout << "Tree Height: " << bst.height() << " (Expected: 3)" << std::endl;
+    assert(bst.height() == 3);
 
-    std::cout << "Postorder: ";
-    t.postorder();
-    std::cout << "\n";
+    printSection("Traversals (Visual Check)");
 
-    std::cout << "Level Order: ";
-    t.levelorder();
-    std::cout << "\n";
+    std::cout << "Inorder (Recursive): ";
+    bst.inorder(); // Should be 20 30 40 50 60 70 80
+    std::cout << "\nInorder (Iterative): ";
+    bst.inorderI();
+    std::cout << std::endl;
 
-    std::cout << "\nIterative Traversals\n";
+    std::cout << "Preorder (Recursive): ";
+    bst.preorder(); // Should be 50 30 20 40 70 60 80
+    std::cout << "\nPreorder (Iterative): ";
+    bst.preorderI();
+    std::cout << std::endl;
 
-    std::cout << "Preorder Iterative: ";
-    t.preorderI();
-    std::cout << "\n";
+    std::cout << "Postorder (Recursive): ";
+    bst.postorder(); // Should be 20 40 30 60 80 70 50
+    std::cout << "\nPostorder (Iterative): ";
+    bst.postorderI();
+    std::cout << std::endl;
 
-    std::cout << "Inorder Iterative: ";
-    t.inorderI();
-    std::cout << "\n";
+    std::cout << "Level-order: ";
+    bst.levelorder(); // Should be 50 30 70 20 40 60 80
+    std::cout << std::endl;
 
-    std::cout << "Postorder Iterative: ";
-    t.postorderI();
-    std::cout << "\n";
+    printSection("Search and Min/Max");
+    auto minNode = bst.findMin();
+    auto maxNode = bst.findMax();
+    if (minNode)
+        std::cout << "Min: " << minNode->data << " (Expected: 20)" << std::endl;
+    if (maxNode)
+        std::cout << "Max: " << maxNode->data << " (Expected: 80)" << std::endl;
 
-    std::cout << "\nTree Height = "
-              << t.height() << "\n";
+    assert(minNode->data == 20);
+    assert(maxNode->data == 80);
 
-    std::cout << "Node Count = "
-              << t.countNodes() << "\n";
+    auto searchNode = bst.search(40);
+    std::cout << "Searching for 40: " << (searchNode ? "Found" : "Not Found") << std::endl;
+    assert(searchNode != nullptr);
+
+    auto searchFail = bst.search(99);
+    std::cout << "Searching for 99: " << (searchFail ? "Found" : "Not Found") << std::endl;
+    assert(searchFail == nullptr);
+
+    printSection("BST Validation");
+    std::cout << "Is valid BST? " << (bst.isValidBST() ? "Yes" : "No") << std::endl;
+    assert(bst.isValidBST() == true);
+
+    printSection("Lowest Common Ancestor");
+    // LCA of 20 and 40 is 30
+    auto lca1 = bst.lowestCommonAncestor(20, 40);
+    std::cout << "LCA of 20 and 40: " << lca1->data << " (Expected: 30)" << std::endl;
+    assert(lca1->data == 30);
+
+    // LCA of 20 and 80 is 50
+    auto lca2 = bst.lowestCommonAncestor(20, 80);
+    std::cout << "LCA of 20 and 80: " << lca2->data << " (Expected: 50)" << std::endl;
+    assert(lca2->data == 50);
+
+    printSection("Deletion");
+    std::cout << "Deleting leaf node 20..." << std::endl;
+    bst.deleteNode(20);
+    bst.inorder();
+    std::cout << "\nNodes after delete: " << bst.countNodes() << " (Expected: 6)" << std::endl;
+    assert(bst.countNodes() == 6);
+
+    std::cout << "Deleting node with two children 70..." << std::endl;
+    bst.deleteNode(70);
+    bst.inorder();
+    std::cout << std::endl;
+    assert(bst.isValidBST());
+
+    std::cout << "\nAll tests passed successfully!" << std::endl;
 
     return 0;
 }
