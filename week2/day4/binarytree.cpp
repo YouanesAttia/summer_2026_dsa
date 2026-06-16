@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include "Stack.hpp"
 #include "Queue.hpp"
+#include <vector>
+#include <algorithm>
 
 template <class T>
 class Tree
@@ -291,6 +293,31 @@ public:
             t = t->right;
         }
         return t;
+    }
+
+    std::vector<T> inorder2()
+    {
+        std::vector<T> v;
+        inorder2(root, v);
+        return v;
+    }
+
+    void inorder2(node *n, std::vector<T> &v)
+    {
+        if (n == nullptr)
+            return;
+
+        inorder2(n->left, v);
+        v.push_back(n->data);
+        inorder2(n->right, v);
+    }
+
+    bool isValidBST()
+    {
+        std::vector<T> v = inorder2();
+        if (std::is_sorted(v.begin(), v.end()))
+            return true;
+        return false;
     }
 };
 
