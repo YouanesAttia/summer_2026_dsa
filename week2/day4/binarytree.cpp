@@ -319,6 +319,89 @@ public:
             return true;
         return false;
     }
+
+    node *deleteNode(T key)
+    {
+        return deleteNode(root, key);
+    }
+
+    node *deleteNode(node *n, T key)
+    {
+        if (n == nullptr)
+        {
+            return n;
+        }
+
+        if (key < n->data)
+        {
+            n->left = deleteNode(n->left, key);
+        }
+        else if (key > n->data)
+        {
+            n->right = deleteNode(n->right, key);
+        }
+
+        else
+        {
+            if (n->left == nullptr)
+            {
+                node *temp = n->right;
+                delete n;
+                return temp;
+            }
+            else if (n->right == nullptr)
+            {
+                node *temp = n->left;
+                delete n;
+                return temp;
+            }
+
+            node *temp = findMin(n->right);
+            n->data = temp->data;
+            n->right = deleteNode(n->right, temp->data);
+        }
+        return n;
+    }
+
+    node *lowestCommonAncestor(const T val1, const T val2)
+    {
+        node *p = root;
+        node *q = root;
+        node *lca = root;
+
+        while (p != nullptr && q != nullptr)
+        {
+            if (p == q)
+            {
+                lca = p;
+            }
+            else
+            {
+                break;
+            }
+
+            if (p->data > val1)
+            {
+                p = p->left;
+            }
+            else if (p->data < val1)
+            {
+                p = p->right;
+            }
+
+            if (q->data > val2)
+            {
+                q = q->left;
+            }
+            else if (q->data < val2)
+            {
+                q = q->right;
+            }
+            if (p != nullptr && p->data == val1 && q != nullptr && q->data == val2)
+                break;
+        }
+        return lca;
+    }
 };
 
 int main()
