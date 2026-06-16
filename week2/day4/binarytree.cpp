@@ -243,6 +243,31 @@ public:
     {
         return countNodes(root);
     }
+
+    node *search(T x)
+    {
+        return search(root, x);
+    }
+
+    node *search(node *n, T x)
+    {
+        if (n == nullptr)
+            return nullptr;
+
+        node *t = n;
+        if (t->data > x)
+        {
+            return search(t->left, x);
+        }
+        else if (t->data < x)
+        {
+            return search(t->right, x);
+        }
+        else
+        {
+            return t;
+        }
+    }
 };
 
 int main()
