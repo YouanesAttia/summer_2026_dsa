@@ -268,6 +268,30 @@ public:
             return t;
         }
     }
+
+    node *findMin()
+    {
+        if (root == nullptr)
+            return nullptr;
+        node *t = root;
+        while (t->left != nullptr)
+        {
+            t = t->left;
+        }
+        return t;
+    }
+
+    node *findMax()
+    {
+        if (root == nullptr)
+            return nullptr;
+        node *t = root;
+        while (t->right != nullptr)
+        {
+            t = t->right;
+        }
+        return t;
+    }
 };
 
 int main()
