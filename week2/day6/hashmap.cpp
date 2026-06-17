@@ -2,6 +2,9 @@
 #include <string>
 #include <utility>
 #include <stdexcept>
+#include <chrono>
+#include <cassert>
+#include <iostream>
 
 template <typename K, typename V>
 class HashMap
@@ -162,3 +165,54 @@ public:
         return currentSize == 0;
     }
 };
+
+int main()
+{
+    HashMap<int, int> map;
+
+    const int N = 1000;
+
+    auto start = std::chrono::high_resolution_clock::now();
+
+    for (int i = 0; i < N; i++)
+    {
+        map.put(i, i * 10);
+    }
+
+    for (int i = 0; i < N; i++)
+    {
+        assert(map.contains(i));
+        assert(map.get(i) == i * 10);
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto duration =
+        std::chrono::duration_cast<std::chrono::microseconds>(
+            end - start);
+
+    std::cout << "Inserted and verified "
+              << N
+              << " items\n";
+
+    std::cout << "Time: "
+              << duration.count()
+              << " microseconds\n";
+
+    for (int i = 0; i < 100; i++)
+    {
+        map.remove(i);
+    }
+
+    for (int i = 0; i < 100; i++)
+    {
+        assert(!map.contains(i));
+    }
+
+    std::cout << "Remove test passed\n";
+    std::cout << "Current size = "
+              << map.size()
+              << '\n';
+
+    return 0;
+}
