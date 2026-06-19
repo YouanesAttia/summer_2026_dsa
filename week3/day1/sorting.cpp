@@ -40,8 +40,4 @@ void selectionSort(std::vector<int> &v)
 
 int main()
 {
-    std::vector<int> v = {2, 5, 6, 3, 4, 6, 76, 8};
-    selectionSort(v);
-    for (int i = 0; i < v.size(); i++)
-        std::cout << v[i] << " ";
 }
