@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
+#include <cstdlib>
 
 void swap(int &a, int &b)
 {
@@ -167,12 +169,46 @@ void quickSort(std::vector<int> &v)
 
 int main()
 {
-    std::vector<int> v = {2, 5, 6, 3, 4, 6, 76, 8};
+    std::vector<int> sizes = {1000, 10000, 100000};
 
-    mergeSort(v);
+    std::cout << "Algorithm\t1,000\t\t10,000\t\t100,000\n";
+    std::cout << "------------------------------------------------------------\n";
 
-    for (int x : v)
+    const char *names[] = {"Bubble", "Selection", "Insertion", "Merge", "Quick"};
+
+    for (int i = 0; i < 5; i++)
     {
-        std::cout << x << " ";
+        std::cout << names[i] << (i > 2 ? "\t\t" : "\t"); // Formatting alignment
+
+        for (int n : sizes)
+        {
+            std::vector<int> v;
+            for (int k = 0; k < n; k++)
+            {
+                v.push_back(rand() % 1000000);
+            }
+
+            auto start = std::chrono::high_resolution_clock::now();
+
+            if (i == 0)
+                bubbleSort(v);
+            else if (i == 1)
+                selectionSort(v);
+            else if (i == 2)
+                insertionSort(v);
+            else if (i == 3)
+                mergeSort(v);
+            else if (i == 4)
+                quickSort(v);
+
+            auto end = std::chrono::high_resolution_clock::now();
+            auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+            std::cout << diff.count() << " ms\t\t";
+            std::cout.flush(); // Ensure progress shows for slow sorts
+        }
+        std::cout << "\n";
     }
+
+    return 0;
 }
