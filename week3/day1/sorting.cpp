@@ -104,6 +104,71 @@ void mergeSort(std::vector<int> &v)
     mergeSort(0, v.size() - 1, v);
 }
 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+void medianOfThree(std::vector<int> &v, int l, int h)
+{
+    int mid = l + (h - l) / 2;
+
+    if (v[mid] < v[l])
+        std::swap(v[l], v[mid]);
+    if (v[h] < v[l])
+        std::swap(v[l], v[h]);
+    if (v[h] < v[mid])
+        std::swap(v[mid], v[h]);
+
+    std::swap(v[l], v[mid]);
+}
+
+int partition(std::vector<int> &v, int l, int h)
+{
+    medianOfThree(v, l, h);
+
+    int pivot = v[l];
+    int i = l;
+    int j = h;
+
+    while (i < j)
+    {
+        do
+        {
+            i++;
+        } while (i <= h && v[i] <= pivot);
+
+        do
+        {
+            j--;
+        } while (v[j] > pivot);
+
+        if (i < j)
+        {
+            std::swap(v[i], v[j]);
+        }
+    }
+
+    std::swap(v[l], v[j]);
+    return j;
+}
+
+void quickSortRecursive(std::vector<int> &v, int l, int h)
+{
+    if (l < h)
+    {
+        int p = partition(v, l, h);
+        quickSortRecursive(v, l, p - 1);
+        quickSortRecursive(v, p + 1, h);
+    }
+}
+
+void quickSort(std::vector<int> &v)
+{
+    if (v.size() < 2)
+        return;
+    quickSortRecursive(v, 0, v.size() - 1);
+}
+
 int main()
 {
     std::vector<int> v = {2, 5, 6, 3, 4, 6, 76, 8};
