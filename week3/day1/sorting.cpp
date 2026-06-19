@@ -54,11 +54,61 @@ void insertionSort(std::vector<int> &v)
     }
 }
 
+void merge(int l, int mid, int h, std::vector<int> &v)
+{
+    int i = l;
+    int j = mid + 1;
+    std::vector<int> temp;
+    while (i <= mid && j <= h)
+    {
+        if (v[i] <= v[j])
+        {
+            temp.push_back(v[i]);
+            i++;
+        }
+        else
+        {
+            temp.push_back(v[j]);
+            j++;
+        }
+    }
+    while (i <= mid)
+    {
+        temp.push_back(v[i]);
+        i++;
+    }
+    while (j <= h)
+    {
+        temp.push_back(v[j]);
+        j++;
+    }
+    for (int index = 0; index < temp.size(); index++)
+    {
+        v[l + index] = temp[index];
+    }
+}
+
+void mergeSort(int l, int h, std::vector<int> &v)
+{
+    if (h > l)
+    {
+        int mid = (h + l) / 2;
+        mergeSort(l, mid, v);
+        mergeSort(mid + 1, h, v);
+        merge(l, mid, h, v);
+    }
+}
+
+void mergeSort(std::vector<int> &v)
+{
+    mergeSort(0, v.size() - 1, v);
+}
+
 int main()
 {
     std::vector<int> v = {2, 5, 6, 3, 4, 6, 76, 8};
 
-    insertionSort(v);
+    mergeSort(v);
 
     for (int x : v)
     {
