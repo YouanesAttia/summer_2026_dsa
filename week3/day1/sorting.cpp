@@ -104,10 +104,6 @@ void mergeSort(std::vector<int> &v)
     mergeSort(0, v.size() - 1, v);
 }
 
-#include <iostream>
-#include <vector>
-#include <algorithm>
-
 void medianOfThree(std::vector<int> &v, int l, int h)
 {
     int mid = l + (h - l) / 2;
