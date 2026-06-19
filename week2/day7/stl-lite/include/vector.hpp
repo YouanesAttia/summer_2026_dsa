@@ -1,7 +1,6 @@
-#include <iostream>
+#pragma once
 #include <stdexcept>
-#include <utility>
-
+#include <iostream>
 template <class T>
 class Vector
 {
@@ -114,13 +113,23 @@ public:
         return *this;
     }
 
-    int getsize()
+    int size()
     {
         return _size;
     }
 
-    int getcapacity()
+    int capacity()
     {
         return _capacity;
+    }
+    bool empty() const
+    {
+        return _size == 0;
+    }
+
+    void clear()
+    {
+        _size = 0;
+        // Note: Real std::vector doesn't shrink capacity on clear(), it just resets size!
     }
 };
