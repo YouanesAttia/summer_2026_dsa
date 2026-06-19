@@ -294,8 +294,6 @@ public:
     }
 };
 
-#include <iostream>
-
 int main()
 {
     DoublyLinkedList<int> list;
