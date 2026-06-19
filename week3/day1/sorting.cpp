@@ -113,13 +113,13 @@ void medianOfThree(std::vector<int> &v, int l, int h)
     int mid = l + (h - l) / 2;
 
     if (v[mid] < v[l])
-        std::swap(v[l], v[mid]);
+        swap(v[l], v[mid]);
     if (v[h] < v[l])
-        std::swap(v[l], v[h]);
+        swap(v[l], v[h]);
     if (v[h] < v[mid])
-        std::swap(v[mid], v[h]);
+        swap(v[mid], v[h]);
 
-    std::swap(v[l], v[mid]);
+    swap(v[l], v[mid]);
 }
 
 int partition(std::vector<int> &v, int l, int h)
@@ -144,11 +144,11 @@ int partition(std::vector<int> &v, int l, int h)
 
         if (i < j)
         {
-            std::swap(v[i], v[j]);
+            swap(v[i], v[j]);
         }
     }
 
-    std::swap(v[l], v[j]);
+    swap(v[l], v[j]);
     return j;
 }
 
