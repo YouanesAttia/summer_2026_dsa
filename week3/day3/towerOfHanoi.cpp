@@ -9,8 +9,3 @@ void towerOfHanoi(int n, int from, int aux, int to)
         towerOfHanoi(n - 1, aux, from, to);
     }
 }
-
-int main()
-{
-    towerOfHanoi(3, 1, 2, 3);
-}
