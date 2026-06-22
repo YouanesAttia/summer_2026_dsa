@@ -9,6 +9,8 @@ private:
 
 public:
     Graph() = default;
+    Graph(std::unordered_map<int, std::vector<int>> g_) : g(g_) {}
+
     void addEdgeDirected(int u, int v)
     {
         g[u].push_back(v);
@@ -41,6 +43,28 @@ public:
             }
         }
         return result;
+    }
+
+    std::vector<int> DFS(int start)
+    {
+        std::unordered_map<int, bool> isvisited;
+        std::vector<int> result;
+        DFS(start, isvisited, result);
+        return result;
+    }
+
+    void DFS(int start, std::unordered_map<int, bool> &check, std::vector<int> &v)
+    {
+        if (check[start] == 0)
+        {
+            v.push_back(start);
+            check[start] = 1;
+            for (int i = 0; i < g[start].size(); i++)
+            {
+                if (!check[g[start][i]])
+                    DFS(g[start][i], check, v);
+            }
+        }
     }
 };
 
