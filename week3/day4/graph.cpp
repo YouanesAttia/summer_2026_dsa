@@ -1,7 +1,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
-
+#include "../../week2/day7/stl-lite/include/queue.hpp"
 class Graph
 {
 private:
@@ -17,6 +17,30 @@ public:
     {
         g[u].push_back(v);
         g[v].push_back(u);
+    }
+
+    std::vector<int> BFS(int start)
+    {
+        Queue<int> q;
+        std::vector<int> result;
+        std::unordered_map<int, bool> isvisited;
+        q.enqueue(start);
+        result.push_back(start);
+        isvisited[start] = 1;
+        while (!q.isempty())
+        {
+            int val = q.dequeue();
+            for (int i = 0; i < g[val].size(); i++)
+            {
+                if (!isvisited[g[val][i]])
+                {
+                    q.enqueue(g[val][i]);
+                    result.push_back(g[val][i]);
+                    isvisited[g[val][i]] = 1;
+                }
+            }
+        }
+        return result;
     }
 };
 
