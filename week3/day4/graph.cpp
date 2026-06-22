@@ -136,6 +136,13 @@ public:
         recStack[node] = false;
         return false;
     }
+
+    bool isConnected()
+    {
+        std::vector<int> reachable = DFS(0);
+
+        return reachable.size() == g.size();
+    }
 };
 
 std::unordered_map<int, std::vector<int>> FillGraph()
