@@ -9,10 +9,20 @@ private:
 
 public:
     Graph() = default;
+    void addEdgeDirected(int u, int v)
+    {
+        g[u].push_back(v);
+    }
+    void addEdgeUndirected(int u, int v)
+    {
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
 };
 
-void FillGraph()
+std::unordered_map<int, std::vector<int>> FillGraph()
 {
+    std::unordered_map<int, std::vector<int>> g;
     int nodes;
     std::cout << "Enter the number of nodes: ";
     std::cin >> nodes;
@@ -34,4 +44,5 @@ void FillGraph()
         }
         g[nodeVal] = v;
     }
+    return g;
 }
