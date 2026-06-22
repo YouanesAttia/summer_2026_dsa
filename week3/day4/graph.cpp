@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <vector>
 #include "../../week2/day7/stl-lite/include/queue.hpp"
+#include "../../week2/day7/stl-lite/include/stack.hpp"
 class Graph
 {
 private:
@@ -65,6 +66,75 @@ public:
                     DFS(g[start][i], check, v);
             }
         }
+    }
+
+    std::vector<int> DFS_iterative(int start)
+    {
+        std::unordered_map<int, bool> isvisited;
+        std::vector<int> result;
+        Stack<int> st;
+
+        st.push(start);
+        isvisited[start] = true;
+
+        while (!st.isEmpty())
+        {
+            int val = st.pop();
+            result.push_back(val);
+
+            for (int neighbor : g[val])
+            {
+                if (!isvisited[neighbor])
+                {
+                    st.push(neighbor);
+                    isvisited[neighbor] = true;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // visited = node has been seen before
+    // recStack = node is currently in the active DFS path
+    // If we reach a node already in recStack, we found a back edge => cycle
+    bool hasCycle()
+    {
+        std::unordered_map<int, bool> visited;
+        std::unordered_map<int, bool> recStack;
+
+        for (auto &[node, neighbors] : g)
+        {
+            if (!visited[node])
+            {
+                if (hasCycleDFS(node, visited, recStack))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool hasCycleDFS(int node, std::unordered_map<int, bool> &visited, std::unordered_map<int, bool> &recStack)
+    {
+        visited[node] = true;
+        recStack[node] = true;
+
+        for (int neighbor : g[node])
+        {
+            if (!visited[neighbor])
+            {
+                if (hasCycleDFS(neighbor, visited, recStack))
+                    return true;
+            }
+            else if (recStack[neighbor])
+            {
+                return true;
+            }
+        }
+
+        recStack[node] = false;
+        return false;
     }
 };
 
