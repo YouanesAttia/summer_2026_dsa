@@ -1,25 +1,29 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <utility>
 #include "../../week2/day7/stl-lite/include/queue.hpp"
 #include "../../week2/day7/stl-lite/include/stack.hpp"
+
 class Graph
 {
 private:
-    std::unordered_map<int, std::vector<int>> g;
+    std::unordered_map<int, std::vector<std::pair<int, int>>> g;
 
 public:
     Graph() = default;
-    Graph(std::unordered_map<int, std::vector<int>> g_) : g(g_) {}
 
-    void addEdgeDirected(int u, int v)
+    Graph(std::unordered_map<int, std::vector<std::pair<int, int>>> g_) : g(g_) {}
+
+    void addEdgeDirected(int u, int v, int weight = 0)
     {
-        g[u].push_back(v);
+        g[u].push_back({v, weight});
     }
-    void addEdgeUndirected(int u, int v)
+
+    void addEdgeUndirected(int u, int v, int weight = 0)
     {
-        g[u].push_back(v);
-        g[v].push_back(u);
+        g[u].push_back({v, weight});
+        g[v].push_back({u, weight});
     }
 
     std::vector<int> BFS(int start)
@@ -27,19 +31,22 @@ public:
         Queue<int> q;
         std::vector<int> result;
         std::unordered_map<int, bool> isvisited;
+
         q.enqueue(start);
-        result.push_back(start);
-        isvisited[start] = 1;
+        isvisited[start] = true;
+
         while (!q.isempty())
         {
             int val = q.dequeue();
-            for (int i = 0; i < g[val].size(); i++)
+            result.push_back(val);
+
+            for (auto &edge : g[val])
             {
-                if (!isvisited[g[val][i]])
+                int neighbor = edge.first;
+                if (!isvisited[neighbor])
                 {
-                    q.enqueue(g[val][i]);
-                    result.push_back(g[val][i]);
-                    isvisited[g[val][i]] = 1;
+                    q.enqueue(neighbor);
+                    isvisited[neighbor] = true;
                 }
             }
         }
@@ -50,20 +57,21 @@ public:
     {
         std::unordered_map<int, bool> isvisited;
         std::vector<int> result;
-        DFS(start, isvisited, result);
+        DFS_Recursive(start, isvisited, result);
         return result;
     }
 
-    void DFS(int start, std::unordered_map<int, bool> &check, std::vector<int> &v)
+    void DFS_Recursive(int start, std::unordered_map<int, bool> &check, std::vector<int> &v)
     {
-        if (check[start] == 0)
+        if (!check[start])
         {
             v.push_back(start);
-            check[start] = 1;
-            for (int i = 0; i < g[start].size(); i++)
+            check[start] = true;
+            for (auto &edge : g[start])
             {
-                if (!check[g[start][i]])
-                    DFS(g[start][i], check, v);
+                int neighbor = edge.first;
+                if (!check[neighbor])
+                    DFS_Recursive(neighbor, check, v);
             }
         }
     }
@@ -75,35 +83,35 @@ public:
         Stack<int> st;
 
         st.push(start);
-        isvisited[start] = true;
 
         while (!st.isEmpty())
         {
             int val = st.pop();
-            result.push_back(val);
 
-            for (int neighbor : g[val])
+            if (!isvisited[val])
             {
-                if (!isvisited[neighbor])
+                isvisited[val] = true;
+                result.push_back(val);
+
+                for (auto &edge : g[val])
                 {
-                    st.push(neighbor);
-                    isvisited[neighbor] = true;
+                    int neighbor = edge.first;
+                    if (!isvisited[neighbor])
+                    {
+                        st.push(neighbor);
+                    }
                 }
             }
         }
-
         return result;
     }
 
-    // visited = node has been seen before
-    // recStack = node is currently in the active DFS path
-    // If we reach a node already in recStack, we found a back edge => cycle
     bool hasCycle()
     {
         std::unordered_map<int, bool> visited;
         std::unordered_map<int, bool> recStack;
 
-        for (auto &[node, neighbors] : g)
+        for (auto const &[node, neighbors] : g)
         {
             if (!visited[node])
             {
@@ -111,7 +119,6 @@ public:
                     return true;
             }
         }
-
         return false;
     }
 
@@ -120,8 +127,9 @@ public:
         visited[node] = true;
         recStack[node] = true;
 
-        for (int neighbor : g[node])
+        for (auto &edge : g[node])
         {
+            int neighbor = edge.first;
             if (!visited[neighbor])
             {
                 if (hasCycleDFS(neighbor, visited, recStack))
@@ -139,35 +147,42 @@ public:
 
     bool isConnected()
     {
-        std::vector<int> reachable = DFS(0);
-
+        if (g.empty())
+            return true;
+        std::vector<int> reachable = DFS(g.begin()->first);
         return reachable.size() == g.size();
     }
 };
 
-std::unordered_map<int, std::vector<int>> FillGraph()
+std::unordered_map<int, std::vector<std::pair<int, int>>> FillGraph()
 {
-    std::unordered_map<int, std::vector<int>> g;
+    std::unordered_map<int, std::vector<std::pair<int, int>>> g;
     int nodes;
     std::cout << "Enter the number of nodes: ";
     std::cin >> nodes;
-    for (int i = 1; i <= nodes; i++)
+
+    for (int i = 0; i < nodes; i++)
     {
-        int nodeVal;
-        int connectedNodes;
-        std::vector<int> v;
-        std::cout << "Enter the value of the node number " << i << ": ";
+        int nodeVal, connectedNodes;
+        std::cout << "Enter the value of the node: ";
         std::cin >> nodeVal;
-        std::cout << "Enter the number of connected nodes to the node number " << i << ": ";
+
+        // Ensure node exists in map even if it has 0 connections
+        if (g.find(nodeVal) == g.end())
+            g[nodeVal] = {};
+
+        std::cout << "Number of neighbors for node " << nodeVal << ": ";
         std::cin >> connectedNodes;
-        for (int j = 1; j <= connectedNodes; j++)
+
+        for (int j = 0; j < connectedNodes; j++)
         {
-            int connectedVal;
-            std::cout << "Enter the value of the connected node number " << j << ": ";
-            std::cin >> connectedVal;
-            v.push_back(connectedVal);
+            int neighbor, weight;
+            std::cout << "  Enter neighbor node ID: ";
+            std::cin >> neighbor;
+            std::cout << "  Enter weight for edge (" << nodeVal << "->" << neighbor << "): ";
+            std::cin >> weight;
+            g[nodeVal].push_back({neighbor, weight});
         }
-        g[nodeVal] = v;
     }
     return g;
 }
