@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <vector>
 #include <utility>
+#include <unordered_set>
 #include "../../week2/day7/stl-lite/include/queue.hpp"
 #include "../../week2/day7/stl-lite/include/stack.hpp"
 
@@ -9,6 +10,7 @@ class Graph
 {
 private:
     std::unordered_map<int, std::vector<std::pair<int, int>>> g;
+    std::unordered_set<int> vertices;
 
 public:
     Graph() = default;
@@ -18,12 +20,18 @@ public:
     void addEdgeDirected(int u, int v, int weight = 0)
     {
         g[u].push_back({v, weight});
+
+        vertices.insert(u);
+        vertices.insert(v);
     }
 
     void addEdgeUndirected(int u, int v, int weight = 0)
     {
         g[u].push_back({v, weight});
         g[v].push_back({u, weight});
+
+        vertices.insert(u);
+        vertices.insert(v);
     }
 
     std::vector<int> BFS(int start)
@@ -151,6 +159,16 @@ public:
             return true;
         std::vector<int> reachable = DFS(g.begin()->first);
         return reachable.size() == g.size();
+    }
+
+    std::unordered_set<int> getVertices()
+    {
+        return vertices;
+    }
+
+    std::unordered_map<int, std::vector<std::pair<int, int>>> getMap()
+    {
+        return g;
     }
 };
 
