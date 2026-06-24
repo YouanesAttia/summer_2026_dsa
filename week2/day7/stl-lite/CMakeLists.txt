@@ -20,9 +20,17 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 enable_testing()
+include(GoogleTest)
 
+
+# --- Vector Tests ---
 add_executable(test_vector tests/test_vector.cpp)
 target_link_libraries(test_vector gtest_main)
-include(GoogleTest)
 set_target_properties(test_vector PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 gtest_discover_tests(test_vector)
+
+# --- Stack Tests (Added this part) ---
+add_executable(test_stack tests/test_stack.cpp)
+target_link_libraries(test_stack gtest_main)
+set_target_properties(test_stack PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+gtest_discover_tests(test_stack)
