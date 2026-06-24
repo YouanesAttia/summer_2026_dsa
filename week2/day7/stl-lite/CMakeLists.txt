@@ -29,8 +29,14 @@ target_link_libraries(test_vector gtest_main)
 set_target_properties(test_vector PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 gtest_discover_tests(test_vector)
 
-# --- Stack Tests (Added this part) ---
+# --- Stack Tests ---
 add_executable(test_stack tests/test_stack.cpp)
 target_link_libraries(test_stack gtest_main)
 set_target_properties(test_stack PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 gtest_discover_tests(test_stack)
+
+# --- Queue Tests ---
+add_executable(test_queue tests/test_queue.cpp)
+target_link_libraries(test_queue gtest_main)
+set_target_properties(test_queue PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+gtest_discover_tests(test_queue)
