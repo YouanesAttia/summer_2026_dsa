@@ -30,6 +30,5 @@ std::unordered_map<int, int> dijkstra(Graph g, int source)
             }
         }
     }
-
     return d;
 }
