@@ -205,3 +205,166 @@ public:
         head = p;
     }
 };
+
+template <class T>
+class Vector
+{
+private:
+    int capacity;
+    int size;
+    T *v;
+
+public:
+    Vector() : size(0), capacity(1), v(new T[capacity]) {}
+    Vector(size_type c) : size(0), capacity(c), v(new T[capacity])
+    {
+        for (int i = 0; i < capacity; i++)
+            v[i] = -1;
+    }
+    Vector(size_type n, const T &value) : size(0), capacity(n), v(new T[capacity])
+    {
+        for (int i = 0; i < capacity; i++)
+            v[i] = value;
+    }
+    Vector(const vector &other)
+    {
+        size = other.size;
+        capacity = other.capacity;
+        v = new T[capacity];
+        for (int i = 0; i < size; i++)
+        {
+            v[i] = other.v[i];
+        }
+    }
+    Vector(Vector<T> &&other) noexcept
+    {
+        size = other.size;
+        capacity = other.capacity;
+        v = other.v;
+        other.v = nullptr;
+        other.size = 0;
+        other.capacity = 0;
+    }
+    ~Vector()
+    {
+        delete[] v;
+    }
+
+    void push_back(T val)
+    {
+        if (size == capacity)
+        {
+            capacity = capacity * 2;
+            T *v2 = new T[capacity];
+            for (int i = 0; i < size; i++)
+            {
+                v2[i] = v[i];
+            }
+            delete[] v;
+            v = v2;
+        }
+        v[size++] = val;
+    }
+
+    void pop_back()
+    {
+        if (!size)
+        {
+            size--;
+        }
+        else
+        {
+            throw std::range_error("Vector is Empty");
+        }
+
+        if (size * 2 <= capacity)
+        {
+            capacity = capacity / 2 T *v2 = new T[capacity];
+            for (int i = 0; i < size; i++)
+            {
+                v2[i] = v[i];
+            }
+            delete[] v;
+            v = v2;
+        }
+    }
+
+    T at(int idx)
+    {
+        if (idx >= size)
+            throw std::range_error("Out of range");
+
+        return v[idx];
+    }
+
+    T front()
+    {
+        if (size == 0)
+            throw std::range_error("Vector is Empty");
+
+        return v[0];
+    }
+
+    T back()
+    {
+        if (size == 0)
+            throw std::range_error("Vector is Empty");
+
+        return v[size - 1];
+    }
+
+    int getsize()
+    {
+        return size;
+    }
+
+    int getcapacity()
+    {
+        return capacity;
+    }
+
+    bool empty()
+    {
+        return size == 0;
+    }
+
+    T &operator[](const int &index)
+    {
+        if (index >= size)
+            throw std::out_of_range("Index out of range");
+        return v[index];
+    }
+
+    Vector &operator=(const Vector &other)
+    {
+        if (this != &other)
+        {
+            delete[] v;
+            size = other.size;
+            capacity = other.capacity;
+            v = new T[capacity];
+            for (int i = 0; i < size; i++)
+            {
+                v[i] = other.v[i];
+            }
+        }
+        return *this;
+    }
+
+    Vector &operator=(Vector &&other) noexcept
+    {
+        if (this != &other)
+        {
+            delete[] v;
+
+            v = other.v;
+            size = other.size;
+            capacity = other.capacity;
+
+            other.v = nullptr;
+            other.size = 0;
+            other.capacity = 0;
+        }
+        return *this;
+    }
+};
