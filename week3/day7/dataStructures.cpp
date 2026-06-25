@@ -368,3 +368,192 @@ public:
         return *this;
     }
 };
+
+template <class T>
+class DoublyLinkedList
+{
+private:
+    struct Node
+    {
+        T data;
+        Node *next;
+        Node *prev;
+        Node(T d) : data(d), next(nullptr), prev(nullptr) {}
+    };
+    Node *head;
+
+public:
+    DoublyLinkedList()
+    {
+        head = nullptr;
+    }
+
+    DoublyLinkedList(T d) : head(new Node(d)) {}
+
+    ~DoublyLinkedList()
+    {
+        while (head != nullptr)
+        {
+            Node *temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+
+    void push_front(const T d)
+    {
+        Node *n = new Node(d);
+        n->next = head;
+        if (head != nullptr)
+        {
+            head->prev = n;
+        }
+        head = n;
+    }
+
+    void push_back(const T d)
+    {
+        Node *n = new Node(d);
+        if (head == nullptr)
+        {
+            head = n;
+            return;
+        }
+        Node *tmp = head;
+        while (tmp->next != nullptr)
+        {
+            tmp = tmp->next;
+        }
+        tmp->next = n;
+        n->prev = tmp;
+    }
+
+    void insert(const T d, const int pos)
+    {
+        if (head == nullptr)
+            throw std::range_error("List is Empty");
+
+        if (pos == 0)
+        {
+            push_front(d);
+            return;
+        }
+
+        Node *p = head;
+        for (int i = 0; i < pos - 1; i++)
+        {
+            p = p->next;
+        }
+        if (p == nullptr)
+            throw std::range_error("Not a valid position");
+
+        Node *n = new Node(d);
+        n->next = p->next;
+        n->prev = p;
+        if (p->next != nullptr)
+        {
+            p->next->prev = n;
+        }
+        p->next = n;
+    }
+
+    void pop_front()
+    {
+        if (head == nullptr)
+            throw std::range_error("List is Empty");
+
+        if (head->next == nullptr)
+        {
+            delete head;
+            return;
+        }
+
+        Node *p = head;
+        head = head->next;
+        if (head)
+            head->prev = nullptr;
+        delete p;
+    }
+
+    T frontData()
+    {
+        return head->data;
+    }
+
+    Node *frontNode()
+    {
+        return head;
+    }
+
+    void pop_back()
+    {
+        if (head == nullptr)
+            throw std::range_error("List is Empty");
+
+        if (head->next == nullptr)
+        {
+            delete head;
+            return;
+        }
+
+        Node *p = head;
+        Node *q = nullptr;
+        while (p->next != nullptr)
+        {
+            q = p;
+            p = p->next;
+        }
+        delete p;
+        q->next = nullptr;
+    }
+
+    Node *find(const T &d)
+    {
+        if (head == nullptr)
+            throw std::range_error("List is Empty");
+
+        Node *p = head;
+        while (p != nullptr)
+        {
+            if (p->data == d)
+                return p;
+            else
+                p = p->next;
+        }
+        return p;
+    }
+
+    void deleteByValue(const T val)
+    {
+        if (head == nullptr)
+            throw std::range_error("List is Empty");
+
+        Node *curr = head;
+        while (curr != nullptr && curr->data != val)
+        {
+            curr = curr->next;
+        }
+
+        if (curr == nullptr)
+            throw std::runtime_error("Value not found");
+
+        if (curr == head)
+        {
+            pop_front();
+        }
+        else
+        {
+            curr->prev->next = curr->next;
+            if (curr->next != nullptr)
+            {
+                curr->next->prev = curr->prev;
+            }
+            delete curr;
+        }
+    }
+
+    bool empty() const
+    {
+        return head == nullptr;
+    }
+};
