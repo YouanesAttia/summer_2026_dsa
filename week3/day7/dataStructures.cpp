@@ -226,7 +226,7 @@ public:
         for (int i = 0; i < capacity; i++)
             v[i] = value;
     }
-    Vector(const vector &other)
+    Vector(const Vector &other)
     {
         size = other.size;
         capacity = other.capacity;
@@ -268,18 +268,19 @@ public:
 
     void pop_back()
     {
-        if (!size)
+        if (size == 0)
         {
-            size--;
+            throw std::range_error("Vector is Empty");
         }
         else
         {
-            throw std::range_error("Vector is Empty");
+            size--;
         }
 
         if (size * 2 <= capacity)
         {
-            capacity = capacity / 2 T *v2 = new T[capacity];
+            capacity = capacity / 2;
+            T *v2 = new T[capacity];
             for (int i = 0; i < size; i++)
             {
                 v2[i] = v[i];
@@ -555,5 +556,46 @@ public:
     bool empty() const
     {
         return head == nullptr;
+    }
+};
+
+template <class T>
+class Stack
+{
+private:
+    Vector<T> v;
+    int top_;
+
+public:
+    Stack(int n) : v(n), top_(-1) {}
+    void push(const T &val)
+    {
+        v.push_back(val);
+        top_++;
+    }
+    void pop()
+    {
+        v.pop_back();
+        top_--;
+    }
+    T top()
+    {
+        if (isEmpty())
+            throw std::out_of_range("Stack is Empty");
+
+        return v[top_];
+    }
+    bool isEmpty()
+    {
+        return top_ == -1;
+    }
+    T peek(int pos)
+    {
+        int index = top_ - pos + 1;
+        if (index < 0 || index > top_)
+        {
+            throw std::out_of_range("Invalid Position");
+        }
+        return v[index];
     }
 };
