@@ -2,6 +2,7 @@
 #include <vector>
 #include <chrono>
 #include <cstdlib>
+#include "MinHeap.hpp"
 
 void swap(int &a, int &b)
 {
@@ -33,7 +34,7 @@ void selectionSort(std::vector<int> &v)
         int minindex = i;
         for (int j = i + 1; j < n; j++)
         {
-            if (v[j] < v[i])
+            if (v[j] < v[minindex])
                 minindex = j;
         }
         swap(v[minindex], v[i]);
@@ -174,9 +175,8 @@ int main()
     std::cout << "Algorithm\t1,000\t\t10,000\t\t100,000\n";
     std::cout << "------------------------------------------------------------\n";
 
-    const char *names[] = {"Bubble", "Selection", "Insertion", "Merge", "Quick"};
-
-    for (int i = 0; i < 5; i++)
+    const char *names[] = {"Bubble", "Selection", "Insertion", "Merge", "Quick", "Heap"};
+    for (int i = 0; i < 6; i++)
     {
         std::cout << names[i] << (i > 2 ? "\t\t" : "\t"); // Formatting alignment
 
@@ -200,12 +200,17 @@ int main()
                 mergeSort(v);
             else if (i == 4)
                 quickSort(v);
+            else if (i == 5)
+            {
+                MinHeap<int> heap(n);
+                heap.heapSort(v);
+            }
 
             auto end = std::chrono::high_resolution_clock::now();
             auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
             std::cout << diff.count() << " ms\t\t";
-            std::cout.flush(); // Ensure progress shows for slow sorts
+            std::cout.flush();
         }
         std::cout << "\n";
     }
