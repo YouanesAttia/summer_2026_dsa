@@ -6,9 +6,9 @@ template <class T>
 class MinHeap
 {
 private:
-    T *arr;
     int capacity;
     int size;
+    T *arr;
 
 public:
     MinHeap(int c) : size(0), capacity(c), arr(new T[capacity + 1]) {}
@@ -17,6 +17,9 @@ public:
     {
         delete[] arr;
     }
+
+    MinHeap(const MinHeap &) = delete;
+    MinHeap &operator=(const MinHeap &) = delete;
 
     void swap(int a, int b)
     {
@@ -29,7 +32,7 @@ public:
     {
         if (size == capacity)
         {
-            capacity *= 2;
+            capacity = (capacity == 0) ? 1 : capacity * 2;
             T *arr1 = new T[capacity + 1];
             for (int i = 1; i <= size; i++)
             {
@@ -69,26 +72,17 @@ public:
         int idx = 1;
         while (2 * idx <= size)
         {
-            if (2 * idx == size)
+            int child = 2 * idx; // Left child
+            if (child + 1 <= size && arr[child + 1] < arr[child])
+                child++;
+
+            if (arr[idx] > arr[child])
             {
-                if (arr[idx] > arr[2 * idx])
-                    swap(idx, 2 * idx);
-                break;
-            }
-            if (arr[2 * idx] < arr[2 * idx + 1] && arr[idx] > arr[2 * idx])
-            {
-                swap(idx, 2 * idx);
-                idx *= 2;
-            }
-            else if (arr[2 * idx] > arr[2 * idx + 1] && arr[idx] > arr[2 * idx + 1])
-            {
-                swap(idx, 2 * idx + 1);
-                idx = idx * 2 + 1;
+                swap(idx, child);
+                idx = child;
             }
             else
-            {
                 break;
-            }
         }
         return val;
     }
@@ -103,7 +97,7 @@ public:
         }
 
         size = v.size();
-        for (int i = 0; i < size < i++)
+        for (int i = 0; i < size; i++)
             arr[i + 1] = v[i];
 
         for (int i = size / 2; i >= 1; i--)
@@ -111,31 +105,22 @@ public:
             int idx = i;
             while (2 * idx <= size)
             {
-                if (2 * idx == size)
+                int child = 2 * idx;
+                if (child + 1 <= size && arr[child + 1] < arr[child])
+                    child++;
+
+                if (arr[idx] > arr[child])
                 {
-                    if (arr[idx] > arr[2 * idx])
-                        swap(idx, 2 * idx);
-                    break;
-                }
-                if (arr[2 * idx] < arr[2 * idx + 1] && arr[idx] > arr[2 * idx])
-                {
-                    swap(idx, 2 * idx);
-                    idx *= 2;
-                }
-                else if (arr[2 * idx] > arr[2 * idx + 1] && arr[idx] > arr[2 * idx + 1])
-                {
-                    swap(idx, 2 * idx + 1);
-                    idx = idx * 2 + 1;
+                    swap(idx, child);
+                    idx = child;
                 }
                 else
-                {
                     break;
-                }
             }
         }
     }
 
-    void heapSort(vector<T> &v)
+    void heapSort(std::vector<T> &v)
     {
         buildHeap(v);
         for (int i = 0; i < v.size(); i++)
