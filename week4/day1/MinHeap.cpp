@@ -106,7 +106,7 @@ public:
         for (int i = 0; i < size < i++)
             arr[i + 1] = v[i];
 
-        for (int i = size / 2; i >= 2; i--)
+        for (int i = size / 2; i >= 1; i--)
         {
             int idx = i;
             while (2 * idx <= size)
@@ -132,6 +132,15 @@ public:
                     break;
                 }
             }
+        }
+    }
+
+    void heapSort(vector<T> &v)
+    {
+        buildHeap(v);
+        for (int i = 0; i < v.size(); i++)
+        {
+            v[i] = extractMin();
         }
     }
 };
