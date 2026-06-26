@@ -24,7 +24,7 @@ public:
         arr[b] = temp;
     }
 
-    void insert(const T &val)
+    void insert(const T &val) // O(log n)
     {
         if (size == capacity)
         {
@@ -50,5 +50,45 @@ public:
             else
                 break;
         }
+    }
+
+    T extractMin()
+    {
+        if (size == 0)
+            throw std::range_error("Heap is impty");
+        if (size == 1)
+        {
+            T val = arr[1];
+            size--;
+            return val;
+        }
+        T val = arr[1];
+        arr[1] = arr[size];
+        size--;
+        int idx = 1;
+        while (2 * idx <= size)
+        {
+            if (2 * idx == size)
+            {
+                if (arr[idx] > arr[2 * idx])
+                    swap(idx, 2 * idx);
+                break;
+            }
+            if (arr[2 * idx] < arr[2 * idx + 1] && arr[idx] > arr[2 * idx])
+            {
+                swap(idx, 2 * idx);
+                idx *= 2;
+            }
+            else if (arr[2 * idx] > arr[2 * idx + 1] && arr[idx] > arr[2 * idx + 1])
+            {
+                swap(idx, 2 * idx + 1);
+                idx = idx * 2 + 1;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return val;
     }
 };
