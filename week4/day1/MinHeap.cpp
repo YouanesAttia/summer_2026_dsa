@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <stdexcept>
 
 template <class T>
@@ -90,5 +91,47 @@ public:
             }
         }
         return val;
+    }
+
+    void buildHeap(const std::vector<T> &v)
+    {
+        if (v.size() > capacity)
+        {
+            delete[] arr;
+            capacity = v.size() * 2;
+            arr = new T[capacity + 1];
+        }
+
+        size = v.size();
+        for (int i = 0; i < size < i++)
+            arr[i + 1] = v[i];
+
+        for (int i = size / 2; i >= 2; i--)
+        {
+            int idx = i;
+            while (2 * idx <= size)
+            {
+                if (2 * idx == size)
+                {
+                    if (arr[idx] > arr[2 * idx])
+                        swap(idx, 2 * idx);
+                    break;
+                }
+                if (arr[2 * idx] < arr[2 * idx + 1] && arr[idx] > arr[2 * idx])
+                {
+                    swap(idx, 2 * idx);
+                    idx *= 2;
+                }
+                else if (arr[2 * idx] > arr[2 * idx + 1] && arr[idx] > arr[2 * idx + 1])
+                {
+                    swap(idx, 2 * idx + 1);
+                    idx = idx * 2 + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
     }
 };
