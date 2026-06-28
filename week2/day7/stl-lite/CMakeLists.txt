@@ -40,3 +40,8 @@ add_executable(test_queue tests/test_queue.cpp)
 target_link_libraries(test_queue gtest_main)
 set_target_properties(test_queue PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 gtest_discover_tests(test_queue)
+
+add_executable(test_ll tests/test_linkedlist.cpp)
+target_link_libraries(test_ll gtest_main)
+set_target_properties(test_ll PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+gtest_discover_tests(test_ll)
