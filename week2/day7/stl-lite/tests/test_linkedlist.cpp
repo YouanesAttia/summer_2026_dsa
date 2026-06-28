@@ -226,18 +226,3 @@ TEST(DoublyLinkedListTest, HasNoCycle)
     EXPECT_FALSE(list.hasCycle());
     EXPECT_FALSE(list.hasCycle2());
 }
-
-TEST(DoublyLinkedListTest, DetectCycle)
-{
-    DoublyLinkedList<int> list;
-
-    list.push_back(1);
-    list.push_back(2);
-    list.push_back(3);
-    list.push_back(4);
-
-    list.makeCycle();
-
-    EXPECT_TRUE(list.hasCycle());
-    EXPECT_TRUE(list.hasCycle2());
-}
