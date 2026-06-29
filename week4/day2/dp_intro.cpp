@@ -64,3 +64,7 @@ int longestCommonSubsequence(const std::string &s1, const std::string &s2)
     }
     return arr[n][m];
 }
+
+int knapsack01(int weights[], int values[], int capacity)
+{
+}
