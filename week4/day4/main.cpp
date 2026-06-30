@@ -5,6 +5,11 @@ int main(int argc, char **argv)
     // Initializes the screen and sets up the memory
     initscr();
 
+    int x, y;
+    x = y = 10;
+    // Moves the cursor to the specified location, move(y, x)
+    move(y, x);
+
     // Prints a string to the window
     printw("Hello World!");
 
@@ -13,7 +18,7 @@ int main(int argc, char **argv)
 
     // Whats for suer input, returns int value of the key
     int c = getch();
-    printw("%d", c);
+    mvprintw(0, 0, "%d", c);
     refresh();
     getch();
 
