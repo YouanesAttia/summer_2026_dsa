@@ -14,7 +14,9 @@ int main(int argc, char **argv)
     WINDOW *win = newwin(height, width, start_y, start_x);
     refresh();
 
-    char c = 'g' box(win, (int)c, 104);
+    char c = 'g';
+    box(win, (int)c, 104);
+    // wborder(win, left, right, top, bottom, tlc, trc, blc, brc)
     mvwprintw(win, 1, 1, "This is my box");
     wrefresh(win);
 
