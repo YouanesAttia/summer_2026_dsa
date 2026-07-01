@@ -6,8 +6,8 @@
 #include <vector>
 #include <utility>
 
-#include "../../week2/day7/stl-lite/include/queue.hpp"
-#include "../../week2/day7/stl-lite/include/stack.hpp"
+#include "../../../../week2/day7/stl-lite/include/queue.hpp"
+#include "../../../../week2/day7/stl-lite/include/stack.hpp"
 
 class Graph
 {
